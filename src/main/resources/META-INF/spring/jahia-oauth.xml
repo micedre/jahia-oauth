@@ -80,6 +80,12 @@
                 <entry key="FranceConnectApi">
                     <bean class="org.jahia.modules.scribejava.apis.FranceConnectApi"/>
                 </entry>
+                <entry key="KeycloakApi">
+                    <bean class="com.github.scribejava.apis.KeycloakApi">
+                        <constructor-arg value="${jahia.keycloak.auth.url:http://localhost:8080/auth/realms/master}"/>
+                    </bean>
+                </entry>
+                
             </map>
         </property>
         <property name="jahiaOAuthCacheService" ref="jahiaOAuthCacheServiceImpl"/>
