@@ -44,6 +44,7 @@
 package org.jahia.modules.jahiaoauth.service;
 
 import com.github.scribejava.core.builder.api.BaseApi;
+import com.github.scribejava.core.builder.api.DefaultApi20;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import org.jahia.services.content.JCRNodeWrapper;
 
@@ -130,5 +131,5 @@ public interface JahiaOAuthService {
      *
      * @param oAuthBase20ApiMap Map contains key value of scribejava API
      */
-    void setoAuthBase20ApiMap(Map<String, BaseApi<? extends OAuth20Service>> oAuthBase20ApiMap);
+    void setoAuthBase20ApiMap(Map<String, DefaultApi20> oAuthBase20ApiMap);
 }

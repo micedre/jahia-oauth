@@ -44,7 +44,7 @@
 package org.jahia.modules.jahiaoauth.impl;
 
 import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.builder.api.BaseApi;
+import com.github.scribejava.core.builder.api.DefaultApi20;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import org.apache.commons.lang.StringUtils;
@@ -69,7 +69,7 @@ import java.util.*;
 public class JahiaOAuthServiceImpl implements JahiaOAuthService {
     private static final Logger logger = LoggerFactory.getLogger(JahiaOAuthServiceImpl.class);
 
-    private Map<String, BaseApi<? extends OAuth20Service>> oAuthBase20ApiMap;
+    private Map<String, DefaultApi20> oAuthBase20ApiMap;
     private JahiaOAuthCacheService jahiaOAuthCacheService;
 
     @Override
@@ -81,7 +81,10 @@ public class JahiaOAuthServiceImpl implements JahiaOAuthService {
     public String getAuthorizationUrl(JCRNodeWrapper jahiaOAuthNode, String connectorServiceName, String sessionId, Map<String, String> additionalParams) throws RepositoryException {
         JCRNodeWrapper connectorNode = jahiaOAuthNode.getNode(connectorServiceName);
         OAuth20Service service = createOAuth20Service(connectorNode, connectorServiceName, sessionId);
-
+        if(additionalParams == null){
+            additionalParams = new HashMap<>();
+        }
+        additionalParams.put("state",sessionId);
         return service.getAuthorizationUrl(additionalParams);
     }
 
@@ -318,9 +321,6 @@ public class JahiaOAuthServiceImpl implements JahiaOAuthService {
                 .apiSecret(connectorNode.getPropertyAsString(JahiaOAuthConstants.PROPERTY_API_SECRET))
                 .callback(callbackUrl);
 
-        if (state != null) {
-            serviceBuilder.state(state);
-        }
 
         if (connectorNode.hasProperty(JahiaOAuthConstants.PROPERTY_SCOPE) && StringUtils.isNotBlank(connectorNode.getPropertyAsString(JahiaOAuthConstants.PROPERTY_SCOPE))) {
             serviceBuilder.scope(connectorNode.getPropertyAsString(JahiaOAuthConstants.PROPERTY_SCOPE));
@@ -330,7 +330,7 @@ public class JahiaOAuthServiceImpl implements JahiaOAuthService {
     }
 
     @Override
-    public void setoAuthBase20ApiMap(Map<String, BaseApi<? extends OAuth20Service>> oAuthBase20ApiMap) {
+    public void setoAuthBase20ApiMap(Map<String, DefaultApi20> oAuthBase20ApiMap) {
         this.oAuthBase20ApiMap = oAuthBase20ApiMap;
     }
 
